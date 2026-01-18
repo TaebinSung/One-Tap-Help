@@ -26,3 +26,5 @@ export default function App() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#F5F7FA" },
 });
+
+

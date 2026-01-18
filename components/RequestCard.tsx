@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
   muted: { color: "#6B7280" },
   emergencyText: { color: "#B91C1C" },
 
-  actionsRow: { marginTop: 12, flexDirection: "row", gap: 10 },
-  btn: { flex: 1, paddingVertical: 12, borderRadius: 12, alignItems: "center" },
-  ack: { backgroundColor: "#2563EB" },
-  resolve: { backgroundColor: "#059669" },
-  btnText: { color: "#FFFFFF", fontWeight: "900" },
+  actionsRow: { marginTop: 12, flexDirection: "row", gap: 12 },
+  btn: { flex: 1, paddingVertical: 16, borderRadius: 28, alignItems: "center" },
+  ack: { backgroundColor: "#4B9EEB" },
+  resolve: { backgroundColor: "#57BF42" },
+  btnText: { color: "#FFFFFF", fontWeight: "700", fontSize: 16 },
 
   disabled: { opacity: 0.45 },
   pressed: { opacity: 0.8 },

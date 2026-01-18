@@ -51,7 +51,8 @@ export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () 
       return sortRequests(
         requests.filter(
           (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caretakerId)
-        ) as any
+        ) as any,
+        caretakerId
       );
     },
     [requests, onShift]
@@ -64,7 +65,8 @@ export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () 
       return sortRequests(
         requests.filter(
           (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caretakerId
-        ) as any
+        ) as any,
+        caretakerId
       );
     },
     [requests, onShift]
@@ -157,7 +159,7 @@ export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F3F1EC",
   },
   header: {
     paddingHorizontal: 16,

@@ -10,16 +10,25 @@ function urgencyWeight(u: Urgency) {
 /**
  * Sorting rules:
  * 1) Emergency pinned at top
- * 2) Uncompleted before completed
- * 3) Higher urgency first
- * 4) Newest first
+ * 2) Accepted by current user before others
+ * 3) Uncompleted before completed
+ * 4) Higher urgency first
+ * 5) Newest first
  */
-export function sortRequests(items: RequestItem[]) {
+export function sortRequests(items: RequestItem[], currentUserId?: string) {
   return [...items].sort((a, b) => {
     const ae = a.urgency === "emergency";
     const be = b.urgency === "emergency";
     if (ae && !be) return -1;
     if (!ae && be) return 1;
+
+    // Prioritize requests accepted by current user
+    if (currentUserId) {
+      const aAcceptedByMe = a.acceptedBy === currentUserId;
+      const bAcceptedByMe = b.acceptedBy === currentUserId;
+      if (aAcceptedByMe && !bAcceptedByMe) return -1;
+      if (!aAcceptedByMe && bAcceptedByMe) return 1;
+    }
 
     const ac = a.status === "completed";
     const bc = b.status === "completed";

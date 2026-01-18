@@ -46,6 +46,8 @@ export default function PatientScreen() {
 
       <View style={styles.buttons}>
         <BigButton label="WATER" onPress={() => handleCreate("Water", "normal")} />
+        <BigButton label="FOOD" onPress={() => handleCreate("Food", "high")} />
+        <BigButton label="BATHROOM" onPress={() => handleCreate("Bathroom", "high")} />
         <BigButton label="HELP" onPress={() => handleCreate("Help", "high")} />
         <BigButton
           label="EMERGENCY"

@@ -10,6 +10,64 @@
 - Guardians can see exactly when a request was resolved.
 - **Critical Safety Net (911 Integration):** If an "Emergency" card is triggered, the interface changes drastically. It pins to the top in red and provides a direct, one-tap button to call 911, bridging the gap between local caregiver support and professional emergency services.
 
+## How to Use the App (User Guide)
+
+### Overview
+**One-Tap Help** is a simple request system for home care / assisted living.  
+The app supports **three roles**:
+
+- **Patient**: sends requests (Water, Bathroom, Food, Help, Emergency)
+- **Caretaker**: goes **ON SHIFT**, accepts requests, and marks them complete
+- **Guardian**: always sees requests and can accept/complete them as a backup
+
+All requests update in **realtime**.
+
+---
+
+### Patient (Send a Request)
+
+1. Open the app and go to the **Patient** screen.
+2. Tap one of the large buttons:
+   - **WATER**: patient needs water
+   - **BATHROOM**: patient needs help using the washroom
+   - **FOOD**: patient needs food
+   - **HELP**: general assistance
+   - **EMERGENCY**: urgent emergency request
+3. After tapping, the request is created and immediately appears for the **Caretaker** and **Guardian**.
+
+---
+
+### Caretaker (On-Shift Workflow)
+
+1. Open the app and go to the **Caretaker** screen.
+2. Toggle **ON SHIFT** to start receiving and handling requests.
+3. View the realtime list of incoming requests.
+4. Tap a request to:
+   - **Accept** → mark yourself as the person handling it
+   - **Complete** → close the request once finished
+5. Toggle **OFF SHIFT** when you are no longer available.
+
+> If the caretaker is **OFF SHIFT**, the **Guardian** can still handle requests.
+
+---
+
+### Guardian (Always-On Backup)
+
+1. Open the app and go to the **Guardian** screen.
+2. Requests are always visible in realtime (no shift required).
+3. Tap a request to:
+   - **Accept** → take over if the caretaker is unavailable
+   - **Complete** → mark it resolved
+
+---
+
+### Request Status
+
+- **New / Pending**: request has been created and is waiting
+- **Accepted**: someone (Caretaker or Guardian) is handling it
+- **Completed**: request has been resolved and closed
+
+
 ## How we built it
 - We built One-Tap Help using React Native (Expo) and TypeScript for the frontend, with Firebase powering our backend infrastructure.
 - **Real-Time Sync:** We utilized Firebase Realtime Database to handle the request lifecycle. This ensures that the millisecond a Patient taps "Help," the Caregiver's screen updates instantly without needing to refresh.
@@ -40,3 +98,5 @@
 - **Automated Triage:** Using Presage to assign an emergency rating to requests, prioritizing them based on physiological data rather than just user input.
 - **Wearable Integration:** Extending the "One-Tap" interface to Apple Watch and Galaxy Watch so patients don't need to reach for their phones.
 - **Push Notifications:** Integrating Cloud Functions to send critical alerts to Caregivers even when the app is closed.
+
+

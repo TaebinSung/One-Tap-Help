@@ -74,13 +74,20 @@ export async function createRequest(params: {
 
 export function listenRequests(cb: (items: FireRequest[]) => void) {
   const q = query(requestsCol, orderBy("createdAt", "desc"));
-  return onSnapshot(q, (snap) => {
-    const items: FireRequest[] = snap.docs.map((d) => ({
-      id: d.id,
-      ...(d.data() as any),
-    }));
-    cb(items);
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items: FireRequest[] = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as any),
+      }));
+      cb(items);
+    },
+    (error) => {
+      console.error("Could not listen to requests:", error);
+      cb([]);
+    }
+  );
 }
 
 export async function acceptRequest(requestId: string, userId: string) {
@@ -140,13 +147,20 @@ export async function setCaregiverShift(
 
 export function listenCaregivers(cb: (Caregivers: any[]) => void) {
   const q = query(collection(db, "Caregivers"));
-  return onSnapshot(q, (snap) => {
-    const items = snap.docs.map((d) => ({
-      id: d.id,
-      ...(d.data() as any),
-    }));
-    cb(items);
-  });
+  return onSnapshot(
+    q,
+    (snap) => {
+      const items = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as any),
+      }));
+      cb(items);
+    },
+    (error) => {
+      console.error("Could not listen to caregivers:", error);
+      cb([]);
+    }
+  );
 }
 
 export function listenCaregiverShift(
@@ -154,10 +168,17 @@ export function listenCaregiverShift(
   cb: (onShift: boolean) => void
 ) {
   const CaregiverRef = doc(db, "Caregivers", CaregiverId);
-  return onSnapshot(CaregiverRef, (snap) => {
-    const onShift = snap.data()?.onShift ?? false;
-    cb(onShift);
-  });
+  return onSnapshot(
+    CaregiverRef,
+    (snap) => {
+      const onShift = snap.data()?.onShift ?? false;
+      cb(onShift);
+    },
+    (error) => {
+      console.error("Could not listen to caregiver shift:", error);
+      cb(false);
+    }
+  );
 }
 
 export async function checkAnyCaregiverOnShift(): Promise<boolean> {

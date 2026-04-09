@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   listenRequests,
   acceptRequest,
   completeRequest,
   FireRequest,
   listenCaregivers,
-  checkAnyCaregiverOnShift,
 } from "../store/requestsApi";
 import { sortRequests } from "../utils/requestSort";
 import RequestCard from "../components/RequestCard";
@@ -24,9 +24,8 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
 
   // Listen to caretaker shifts for visibility only
   useEffect(() => {
-    const unsub = listenCaregivers(async (caregivers) => {
-      const onShiftAny = caregivers.some((c) => c.onShift === true);
-      setAnyCaretakerOnShift(onShiftAny);
+    const unsub = listenCaregivers((caregivers) => {
+      setAnyCaretakerOnShift(caregivers.some((c) => c.onShift));
     });
     return unsub;
   }, []);
@@ -36,7 +35,7 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
     () => sortRequests(
       requests.filter(
         (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === guardianId)
-      ) as any
+      )
     ),
     [requests]
   );
@@ -46,7 +45,7 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
     () => sortRequests(
       requests.filter(
         (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== guardianId
-      ) as any
+      )
     ),
     [requests]
   );
@@ -104,7 +103,7 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <RequestCard
-            item={item as any}
+            item={item}
             onAcknowledge={(id: string) =>
               acceptRequest(id, guardianId)
             }

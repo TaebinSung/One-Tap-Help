@@ -2,17 +2,17 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Urgency } from "../types/request";
 
-function label(u: Urgency) {
-  if (u === "low") return "LOW";
-  if (u === "normal") return "NORMAL";
-  if (u === "high") return "HIGH";
-  return "EMERGENCY";
-}
+const URGENCY_LABEL: Record<Urgency, string> = {
+  low: "LOW",
+  normal: "NORMAL",
+  high: "HIGH",
+  emergency: "EMERGENCY",
+};
 
 export default function UrgencyBadge({ urgency }: { urgency: Urgency }) {
   return (
     <View style={[styles.badge, stylesByUrgency[urgency]]}>
-      <Text style={styles.text}>{label(urgency)}</Text>
+      <Text style={styles.text}>{URGENCY_LABEL[urgency]}</Text>
     </View>
   );
 }

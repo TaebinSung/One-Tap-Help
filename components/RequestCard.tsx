@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Linking } from "react-native";
-import { RequestItem } from "../types/request";
 import { timeAgo } from "../utils/time";
 import UrgencyBadge from "./UrgencyBadge";
+import { FireRequest } from "../types/request";
 
 export default function RequestCard({
   item,
@@ -12,7 +12,7 @@ export default function RequestCard({
   disabledReason,
   currentUserId,
 }: {
-  item: any;
+  item: FireRequest;
   onAcknowledge: (id: string) => void;
   onResolve: (id: string) => void;
   acceptedBy?: string | null;

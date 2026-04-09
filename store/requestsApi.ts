@@ -11,24 +11,12 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firestore";
-import { Urgency } from "../types/request";
+import type { Caregiver, FireRequest, Urgency } from "../types/request";
 import { sendNotification } from "../utils/notifications";
 
-export type RequestStatus = "pending" | "accepted" | "completed";
+export type { FireRequest };
 
-export type FireRequest = {
-  id: string;
-  title: string;
-  urgency: Urgency;
-  status: RequestStatus;
-  createdAt?: any;
-  createdBy: string;
-  acceptedBy?: string | null;
-  acceptedAt?: any;
-  completedBy?: string | null;
-  completedAt?: any;
-};
-
+const CAREGIVERS_COL = "Caregivers";
 const requestsCol = collection(db, "requests");
 
 export async function createRequest(params: {
@@ -49,7 +37,7 @@ export async function createRequest(params: {
   // Send notifications to Caregivers on shift only
   try {
     const CaregiversSnap = await getDocs(
-      collection(db, "Caregivers")
+      collection(db, CAREGIVERS_COL)
     );
     const onShiftCaregivers = CaregiversSnap.docs.filter(
       (d) => d.data().onShift === true && d.data().pushToken
@@ -64,9 +52,7 @@ export async function createRequest(params: {
       );
     }
     
-    if (onShiftCaregivers.length === 0) {
-      console.log("No Caregivers on shift - request will be handled by guardian");
-    }
+    // No on-shift caregivers — guardian fallback will handle the request
   } catch (error) {
     console.log("Could not send notifications:", error);
   }
@@ -107,11 +93,11 @@ export async function completeRequest(requestId: string, userId: string) {
 }
 
 export async function registerCaregiverToken(
-  CaregiverId: string,
+  caregiverId: string,
   pushToken: string
 ) {
   try {
-    const CaregiverRef = doc(db, "Caregivers", CaregiverId);
+    const CaregiverRef = doc(db, CAREGIVERS_COL, caregiverId);
     await setDoc(
       CaregiverRef,
       {
@@ -126,27 +112,23 @@ export async function registerCaregiverToken(
 }
 
 export async function setCaregiverShift(
-  CaregiverId: string,
+  caregiverId: string,
   onShift: boolean
 ) {
-  const CaregiverRef = doc(db, "Caregivers", CaregiverId);
+  const CaregiverRef = doc(db, CAREGIVERS_COL, caregiverId);
   try {
     await setDoc(
       CaregiverRef,
-      {
-        onShift,
-        lastUpdated: serverTimestamp(),
-      },
+      { onShift, lastUpdated: serverTimestamp() },
       { merge: true }
     );
-    console.log("Caregiver shift updated:", onShift);
   } catch (error) {
     console.error("Could not update Caregiver shift status:", error);
   }
 }
 
-export function listenCaregivers(cb: (Caregivers: any[]) => void) {
-  const q = query(collection(db, "Caregivers"));
+export function listenCaregivers(cb: (caregivers: Caregiver[]) => void) {
+  const q = query(collection(db, CAREGIVERS_COL));
   return onSnapshot(
     q,
     (snap) => {
@@ -164,10 +146,10 @@ export function listenCaregivers(cb: (Caregivers: any[]) => void) {
 }
 
 export function listenCaregiverShift(
-  CaregiverId: string,
+  caregiverId: string,
   cb: (onShift: boolean) => void
 ) {
-  const CaregiverRef = doc(db, "Caregivers", CaregiverId);
+  const CaregiverRef = doc(db, CAREGIVERS_COL, caregiverId);
   return onSnapshot(
     CaregiverRef,
     (snap) => {
@@ -181,11 +163,4 @@ export function listenCaregiverShift(
   );
 }
 
-export async function checkAnyCaregiverOnShift(): Promise<boolean> {
-  try {
-    const CaregiversSnap = await getDocs(collection(db, "Caregivers"));
-    return CaregiversSnap.docs.some((doc) => doc.data().onShift === true);
-  } catch (error) {
-    return false;
-  }
-}
+

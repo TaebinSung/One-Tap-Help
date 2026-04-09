@@ -27,6 +27,5 @@ const firebaseConfig = {
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
-console.log("Firebase project:", process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID);
 
 export const firebaseApp = initializeApp(firebaseConfig);

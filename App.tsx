@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import SignInScreen from "./screens/SignInScreen";
 import PatientScreen from "./screens/PatientScreen";
+import type { SignInRole, SignInFormData } from "./types/signIn";
 import CaretakerScreen from "./screens/CaregiverScreen";
 import GuardianScreen from "./screens/GuardianScreen";
 import HistoryScreen from "./screens/HistoryScreen";
-import RoleSwitcher from "./components/RoleSwitcher";
 
 type Role = "patient" | "caretaker" | "guardian" | "history" | null;
 type AppScreen = "welcome" | "signin" | "main";
@@ -14,8 +15,9 @@ type AppScreen = "welcome" | "signin" | "main";
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>("welcome");
   const [role, setRole] = useState<Role>(null);
+  const [prevRole, setPrevRole] = useState<Role>("patient");
 
-  const handleSignInComplete = (signInRole: any, data: any) => {
+  const handleSignInComplete = (signInRole: SignInRole, _data: SignInFormData) => {
     // Map sign-in roles to app roles
     const roleMap: { [key: string]: Role } = {
       PATIENT: "patient",
@@ -41,6 +43,7 @@ export default function App() {
   };
 
   return (
+    <SafeAreaProvider>
     <SafeAreaView style={styles.safe}>
       {currentScreen === "welcome" && (
         <WelcomeScreen
@@ -58,24 +61,20 @@ export default function App() {
 
       {currentScreen === "main" && (
         <>
-          {/* <RoleSwitcher
-            role={role || "patient"}
-            onChangeRole={(newRole) => setRole(newRole as Role)}
-          /> */}
-
           {role === "patient" && <PatientScreen />}
           {role === "caretaker" && (
-            <CaretakerScreen onViewHistory={() => setRole("history")} />
+            <CaretakerScreen onViewHistory={() => { setPrevRole("caretaker"); setRole("history"); }} />
           )}
           {role === "guardian" && (
-            <GuardianScreen onViewHistory={() => setRole("history")} />
+            <GuardianScreen onViewHistory={() => { setPrevRole("guardian"); setRole("history"); }} />
           )}
           {role === "history" && (
-            <HistoryScreen onBack={() => setRole(role || "patient")} />
+            <HistoryScreen onBack={() => setRole(prevRole)} />
           )}
         </>
       )}
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

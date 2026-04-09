@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { listenRequests, FireRequest } from "../store/requestsApi";
 import RequestCard from "../components/RequestCard";
 
 export default function HistoryScreen({ onBack }: { onBack?: () => void }) {
   const [requests, setRequests] = useState<FireRequest[]>([]);
   const [historyType, setHistoryType] = useState<"caretaker" | "guardian">("caretaker");
-  const caretakerId = "caretakerA";
-  const guardianId = "guardianA";
-  const currentUserId = historyType === "caretaker" ? caretakerId : guardianId;
+  const currentUserId = historyType === "caretaker" ? "caregiverA" : "guardianA";
 
   useEffect(() => {
     const unsub = listenRequests(setRequests);
@@ -78,7 +77,7 @@ export default function HistoryScreen({ onBack }: { onBack?: () => void }) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <RequestCard
-            item={item as any}
+            item={item}
             onAcknowledge={() => {}}
             onResolve={() => {}}
             acceptedBy={item.acceptedBy}

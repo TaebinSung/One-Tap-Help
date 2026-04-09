@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable, useWindowDimensions, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import { createRequest } from "../store/requestsApi";
 import { Urgency } from "../types/request";
 
@@ -52,8 +52,6 @@ function BigButton({
 
 export default function PatientScreen() {
   const patientId = "patientA";
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
 
   const handleCreate = (title: string, urgency: Urgency) => {
     createRequest({ title, urgency, createdBy: patientId });
@@ -79,7 +77,7 @@ export default function PatientScreen() {
           </View>
           <View style={styles.gridRow}>
             <BigButton
-              label=" FOOD"
+              label="FOOD"
               icon={require("../assets/food_icon.png")}
               variant="food"
               onPress={() => handleCreate("Food", "high")}

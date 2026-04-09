@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   listenRequests,
   acceptRequest,
@@ -13,7 +14,7 @@ import { sortRequests } from "../utils/requestSort";
 import { registerForPushNotifications } from "../utils/notifications";
 import RequestCard from "../components/RequestCard";
 
-export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () => void }) {
+export default function CaregiverScreen({ onViewHistory }: { onViewHistory?: () => void }) {
   const [requests, setRequests] = useState<FireRequest[]>([]);
   const [onShift, setOnShift] = useState(false);
   const [tab, setTab] = useState<"active" | "pending">("active");
@@ -51,7 +52,7 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
       return sortRequests(
         requests.filter(
           (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caregiverId)
-        ) as any,
+        ),
         caregiverId
       );
     },
@@ -65,7 +66,7 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
       return sortRequests(
         requests.filter(
           (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caregiverId
-        ) as any,
+        ),
         caregiverId
       );
     },
@@ -128,7 +129,7 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <RequestCard
-            item={item as any}
+            item={item}
             onAcknowledge={(id: string) =>
               acceptRequest(id, caregiverId)
             }
